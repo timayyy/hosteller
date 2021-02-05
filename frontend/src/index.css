@@ -1,0 +1,76 @@
+body {
+  font-family: "Poppins", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #5d6778;
+  padding-top: 69px;
+}
+
+main {
+  min-height: 80vh;
+}
+
+a {
+  color: #0073ad;
+  text-decoration: none;
+  background-color: transparent;
+}
+.custom-btn-primary {
+  background: #0073ad !important;
+  color: #fff;
+}
+
+.custom-btn-primary:hover {
+  color: #fff;
+  background-color: #29a2df;
+  border-color: #1a8fc9;
+}
+
+/* HEADER SECTION STARTS */
+.header {
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+  background: #fff;
+}
+
+.site-logo .navbar-brand {
+  font-size: 2rem;
+  font-weight: 600;
+  padding-top: 0;
+}
+
+.navbar-toggler span:nth-child(1),
+.navbar-toggler span:nth-child(3) {
+  transition: transform 0.35s ease-in-out;
+}
+
+.navbar-toggler span {
+  display: block;
+  background-color: #0073ad;
+  height: 3px;
+  width: 24px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  transform: rotate(0deg);
+  position: relative;
+  left: 0;
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+  opacity: 1;
+  border-radius: 1px;
+}
+
+/* HEADER SECTION ENDS */
+
+/* HERO SECTION STARTS */
+.site-headline {
+  font-size: 3rem;
+}
+
+.site-tagline {
+  font-size: 1.125rem;
+}
+
+.hero-fancy-text {
+  color: #0073ad;
+  /* border-color: #1d2adb; */
+}
