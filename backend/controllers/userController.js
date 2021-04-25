@@ -17,15 +17,10 @@ const authUser = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ matricNumber });
 
-  if (!user) {
-    res.status(401);
-    throw new Error("Invalid matric number or password");
-  }
-  if (!user.isActive) {
-    res.status(400);
-    throw new Error("Please confirm your email to login");
-  }
-
+  // if (!user) {
+  //   res.status(401);
+  //   throw new Error("Invalid matric number or password");
+  // }
   // if (!user.isActive) {
   //   res.status(400);
   //   throw new Error("Please confirm your email to login");
@@ -42,7 +37,7 @@ const authUser = asyncHandler(async (req, res) => {
       department: user.department,
       homeAddress: user.homeAddress,
       dateOfBirth: user.dateOfBirth,
-      studentPhoneNumber: user.studentPhoneNumber,
+      phoneNumber: user.phoneNumber,
       dadPhoneNumber: user.dadPhoneNumber,
       momPhoneNumber: user.momPhoneNumber,
       isAdmin: user.isAdmin,
@@ -55,7 +50,7 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @route       POST api/users/
+// @route       POST api/users/register
 // @dec         Register a new user
 // @access      Public
 const registerUser = asyncHandler(async (req, res) => {
@@ -64,72 +59,9 @@ const registerUser = asyncHandler(async (req, res) => {
     matricNumber,
     lasuEmail,
     password,
-    password2,
-    photo,
-    faculty,
-    department,
-    homeAddress,
-    dateOfBirth,
-    studentPhoneNumber,
-    dadPhoneNumber,
-    momPhoneNumber,
+    phoneNumber,
+    gender,
   } = req.body;
-
-  //Check if email is a valid lasu email
-  // if (!lasuEmail.includes("@st.lasu.edu.ng")) {
-  //   res.status(400);
-  //   throw new Error("Email must be a Lasu email");
-  // }
-
-  //Check if passwords match
-  if (password != password2) {
-    res.status(400);
-    throw new Error("Password do not match");
-  }
-
-  // const strongPasswordChecker = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
-
-  //Check password length
-  if (password.length < 6) {
-    res.status(400);
-    throw new Error("Password must be at least 6 characters");
-  }
-
-  //Check if there is a letter in password
-  if (password.search(/[a-z]/i) < 0) {
-    throw new Error("Your password must contain at least one letter.");
-  }
-
-  //Check if password contains a lowercase letter
-  if (password.search(/[a-z]/) < 0) {
-    throw new Error(
-      "Your password must contain at least one lowercase letter."
-    );
-  }
-
-  //Check if password contains a uppercase letter
-  if (password.search(/[A-Z]/) < 0) {
-    throw new Error(
-      "Your password must contain at least one uppercase letter."
-    );
-  }
-
-  //Check if password contains a number
-  if (password.search(/[0-9]/) < 0) {
-    throw new Error("Your password must contain at least one digit.");
-  }
-
-  // if (
-  //   matricNumber.substring(4, 6) != "11" ||
-  //   matricNumber.substring(4, 6) != "21" ||
-  //   matricNumber.substring(4, 6) != "31"
-  // ) {
-  //   res.status(400);
-  //   throw new Error("Matric Number must be a valid one");
-  //   console.log(true);
-  // } else {
-  //   console.log(false);
-  // }
 
   const userLasuEmailExists = await User.findOne({ lasuEmail });
   const userMatricNumberExists = await User.findOne({ matricNumber });
@@ -144,69 +76,64 @@ const registerUser = asyncHandler(async (req, res) => {
     matricNumber,
     lasuEmail,
     password,
-    photo,
-    faculty,
-    department,
-    homeAddress,
-    dateOfBirth,
-    studentPhoneNumber,
-    dadPhoneNumber,
-    momPhoneNumber,
+    phoneNumber,
+    gender: gender == "Male" ? "M" : "F"
   });
 
-  const emailToken = generateToken(user._id);
-  const clientUrl = process.env.CLIENT_ORIGIN;
-  console.log(clientUrl);
+  // const emailToken = generateToken(user._id);
+  // const clientUrl = process.env.CLIENT_ORIGIN;
 
-  const output = `
-      <div>
-        <div>
-          <img src="https://lasu.edu.ng/home/img/logo1.png" style="width: 128px" />
-        </div>
-        <div>
-          <h3>Hi ${user.name},<h3>
-        </div>
-        <div>
-        <p style="text-align: center">You registered an account on Hosteller, before being able to use your account you need to verify that this is your email address by clicking here:</p>
-        </div>
-        <div style="text-align: center">
-          <a href=${clientUrl}/confirm/${emailToken}
-            style="background-color: green; 
-            color: #fff;
-            border-color: green;
-            display: inline-block;
-            font-weight: 400;
-            text-align: center;
-            vertical-align: middle;
-            border: 1px solid transparent;
-            padding: .375rem .75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            border-radius: .25rem;
-          "
-          >
-          VERIFY YOUR ACCOUNT
-          </a>
-        </div>  
-        <div>
-          <h3> Welcome to Hosteller! <br>
-          The Hosteller Team
-          </h3>
-        </div>
-      </div>
-  `;
+  // const output = `
+  //     <div>
+  //       <div>
+  //         <img src="https://lasu.edu.ng/home/img/logo1.png" style="width: 128px" />
+  //       </div>
+  //       <div>
+  //         <h3>Hi ${user.name},<h3>
+  //       </div>
+  //       <div>
+  //       <p style="text-align: center">You registered an account on Hosteller, before being able to use your account you need to verify that this is your email address by clicking here:</p>
+  //       </div>
+  //       <div style="text-align: center">
+  //         <a href=${clientUrl}/confirm/${emailToken}
+  //           style="background-color: green; 
+  //           color: #fff;
+  //           border-color: green;
+  //           display: inline-block;
+  //           font-weight: 400;
+  //           text-align: center;
+  //           vertical-align: middle;
+  //           border: 1px solid transparent;
+  //           padding: .375rem .75rem;
+  //           font-size: 1rem;
+  //           line-height: 1.5;
+  //           border-radius: .25rem;
+  //         "
+  //         >
+  //         VERIFY YOUR ACCOUNT
+  //         </a>
+  //       </div>  
+  //       <div>
+  //         <h3> Welcome to Hosteller! <br>
+  //         The Hosteller Team
+  //         </h3>
+  //       </div>
+  //     </div>
+  // `;
 
-  await sendEmail({
-    email: lasuEmail,
-    subject: "VERIFY YOUR ACCOUNT",
-    html: output,
-  });
+  // await sendEmail({
+  //   email: lasuEmail,
+  //   subject: "VERIFY YOUR ACCOUNT",
+  //   html: output,
+  // });
 
   if (user) {
     res.status(201).json({
       _id: user._id,
       name: user.name,
       lasuEmail: user.lasuEmail,
+      phoneNumber: user.phoneNumber,
+      gender: user.gender,
       isActive: user.isActive,
       token: generateToken(user._id),
     });

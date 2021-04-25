@@ -11,6 +11,7 @@ connectDB();
 
 // import leaveRequestRoutes from "./routes/leaveRequestRoutes.js";
 const userRoutes = require("./routes/userRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 
 const app = express()
 
@@ -22,6 +23,7 @@ app.get('/', (req, res) => {
 
 // app.use('/api/leaverequest', leaveRequestRoutes)
 app.use('/api/users', userRoutes)
+app.use('/api/profile', profileRoutes)
 
 
 app.use(notFound);

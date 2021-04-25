@@ -11,8 +11,8 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      maxLength: 9,
-      minLength: 9,
+      maxLength: [9, "Enter a valid matric number"],
+      minLength: [9, "Enter a valid matric number"],
     },
     lasuEmail: {
       type: String,
@@ -23,37 +23,14 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    photo: {
-      type: String,
-      // required: true,
-    },
-    faculty: {
+    phoneNumber: {
       type: String,
       required: true,
     },
-    department: {
+    gender: {
       type: String,
       required: true,
-    },
-    homeAddress: {
-      type: String,
-      required: true,
-    },
-    dateOfBirth: {
-      type: Date,
-      //   required: true,
-    },
-    studentPhoneNumber: {
-      type: String,
-      required: true,
-    },
-    dadPhoneNumber: {
-      type: String,
-      required: true,
-    },
-    momPhoneNumber: {
-      type: String,
-      required: true,
+      enum: ['M', 'F']
     },
     isAdmin: {
       type: Boolean,

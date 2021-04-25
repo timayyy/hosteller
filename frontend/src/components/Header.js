@@ -43,16 +43,16 @@ const Header = ({ history }) => {
 
             <div class="collapse navbar-collapse py-3 py-lg-0" id="navigation">
               <ul class="navbar-nav ml-lg-auto">
-                {userInfo && userInfo.isActive ? (
+                {userInfo ? (
                   <NavDropdown title={userInfo.name} id="username">
                     <LinkContainer to="/dashboard">
                       <NavDropdown.Item>Dashboard</NavDropdown.Item>
                     </LinkContainer>
-                    <LinkContainer to="/">
-                      <NavDropdown.Item onClick={logoutHandler}>
-                        Logout
+                    {/* <LinkContainer to="/login"> */}
+                    <NavDropdown.Item onClick={logoutHandler}>
+                      Logout
                       </NavDropdown.Item>
-                    </LinkContainer>
+                    {/* </LinkContainer> */}
                   </NavDropdown>
                 ) : (
                   <>

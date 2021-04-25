@@ -1,7 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-// import {} from "./reducers/artistReducers";
 import {
   userLoginReducer,
   userRegisterReducer,
@@ -11,15 +10,7 @@ import {
   userDetailsReducer,
   userUpdateProfileReducer,
 } from "./reducers/userReducers";
-import {
-  leaveRequestListReducer,
-  leaveRequestListMyReducer,
-  leaveRequestCreateReducer,
-  leaveRequestDetailsReducer,
-  leaveRequestUpdateReducer,
-  leaveRequestApproveReducer,
-  leaveRequestRejectReducer,
-} from "./reducers/leaveRequestReducers";
+import { userProfileReducer } from "./reducers/profileReducers";
 const reducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
@@ -28,18 +19,7 @@ const reducer = combineReducers({
   userUpdateProfile: userUpdateProfileReducer,
   userList: userListReducer,
   userDelete: userDeleteReducer,
-  leaveRequestList: leaveRequestListReducer,
-  leaveRequestDetails: leaveRequestDetailsReducer,
-  leaveRequestListMy: leaveRequestListMyReducer,
-  leaveRequestCreate: leaveRequestCreateReducer,
-  leaveRequestUpdate: leaveRequestUpdateReducer,
-  leaveRequestApprove: leaveRequestApproveReducer,
-  leaveRequestReject: leaveRequestRejectReducer,
-  // orderCreate: orderCreateReducer,
-  // orderDetails: orderDetailsReducer,
-  // orderPay: orderPayReducer,
-  // orderDeliver: orderDeliverReducer,
-  // orderList: orderListReducer,
+  userProfile: userProfileReducer
 });
 
 const userInfoFromStorage = localStorage.getItem("lmUserInfo")

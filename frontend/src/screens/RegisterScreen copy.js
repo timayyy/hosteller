@@ -11,22 +11,24 @@ const RegisterScreen = ({ history, location }) => {
   const [name, setName] = useState("");
   const [matricNumber, setMatricNumber] = useState("");
   const [lasuEmail, setLasuEmail] = useState("");
-  const [gender, setGender] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [studentPhoneNumber, setStudentPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
-
+  const [faculty, setFaculty] = useState("Engineering");
+  const [department, setDepartment] = useState("cpe");
+  const [homeAddress, setHomeAddress] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState(new Date());
+  const [dadPhoneNumber, setDadPhoneNumber] = useState("");
+  const [momPhoneNumber, setMomPhoneNumber] = useState("");
   const [message, setMessage] = useState(null);
 
   const dispatch = useDispatch();
 
   const userRegister = useSelector((state) => state.userRegister);
-  const { loading, success, error, backendErrors } = userRegister;
+  const { loading, success, error } = userRegister;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
-  console.log(backendErrors)
 
   const redirect = location.search
     ? location.search.split("=")[1]
@@ -37,27 +39,33 @@ const RegisterScreen = ({ history, location }) => {
     if (success) {
       history.push("/login");
     }
-    if (userInfo) {
+    if (userInfo && userInfo.isActive) {
       history.push(redirect);
     }
-    // if (userInfo && userInfo.isActive) {
-    //   history.push(redirect);
-    // }
   }, [history, success, userInfo, redirect]);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(
-      register(
-        name,
-        matricNumber,
-        lasuEmail,
-        phoneNumber,
-        gender,
-        password,
-        password2
-      )
-    );
+    if (password !== password2) {
+      setMessage("Passwords do not match");
+    } else {
+      dispatch(
+        register(
+          name,
+          matricNumber,
+          lasuEmail,
+          faculty,
+          department,
+          homeAddress,
+          dateOfBirth,
+          studentPhoneNumber,
+          dadPhoneNumber,
+          momPhoneNumber,
+          password,
+          password2
+        )
+      );
+    }
   };
 
   return (
@@ -65,21 +73,17 @@ const RegisterScreen = ({ history, location }) => {
       <h1>Sign Up</h1>
       {message && <Message variant="danger">{message}</Message>}
       {error && <Message variant="danger">{error}</Message>}
-
+      {loading && <Loader />}
       <Form onSubmit={submitHandler}>
         <Form.Row>
           <Form.Group as={Col} md="6" controlId="name">
             <Form.Label>Name</Form.Label>
             <Form.Control
               type="name"
-              placeholder="Enter full name"
+              placeholder="Enter name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              isInvalid={backendErrors && backendErrors.name}
             ></Form.Control>
-            <Form.Control.Feedback type="invalid">
-              {backendErrors && backendErrors.name}
-            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md="6" controlId="email">
             <Form.Label>Lasu Email Address</Form.Label>
@@ -88,11 +92,34 @@ const RegisterScreen = ({ history, location }) => {
               placeholder="Enter your lasu email"
               value={lasuEmail}
               onChange={(e) => setLasuEmail(e.target.value)}
-              isInvalid={backendErrors && backendErrors.lasuEmail}
             ></Form.Control>
-            <Form.Control.Feedback type="invalid">
-              {backendErrors && backendErrors.lasuEmail}
-            </Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+
+        <Form.Row>
+          <Form.Group as={Col} md="6" controlId="faculty">
+            <Form.Label>Faculty</Form.Label>
+            <Form.Control
+              as="select"
+              value={faculty}
+              onChange={(e) => setFaculty(e.target.value)}
+            >
+              <option value="Engineering">Engineering</option>
+              <option value="Agric">School of agriculture</option>
+              <option value="Other">Other</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group as={Col} md="6" controlId="department">
+            <Form.Label>Department</Form.Label>
+            <Form.Control
+              as="select"
+              value={department}
+              onChange={(e) => setDepartment(e.target.value)}
+            >
+              <option value="ece">Electronics and Computer Engineering</option>
+              <option value="mech">Mechanical Engineering</option>
+              <option value="cpe">Chemical and Polymer Engineering</option>
+            </Form.Control>
           </Form.Group>
         </Form.Row>
 
@@ -104,59 +131,55 @@ const RegisterScreen = ({ history, location }) => {
               placeholder="Enter your matric number"
               value={matricNumber}
               onChange={(e) => setMatricNumber(e.target.value)}
-              isInvalid={backendErrors && backendErrors.matricNumber}
             ></Form.Control>
-            <Form.Control.Feedback type="invalid">
-              {backendErrors && backendErrors.matricNumber}
-            </Form.Control.Feedback>
           </Form.Group>
+          <Form.Group as={Col} md="6" controlId="homeAddress">
+            <Form.Label>Home Address</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter your home address"
+              value={homeAddress}
+              onChange={(e) => setHomeAddress(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+        </Form.Row>
 
-          <Form.Group as={Col} md="6" controlId="phonenumber">
+        <Form.Row>
+          <Form.Group as={Col} md="4" controlId="studentphonenumber">
             <Form.Label>Student Phone Number</Form.Label>
             <Form.Control
               type="text"
               placeholder="Enter your phone number"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              isInvalid={backendErrors && backendErrors.phoneNumber}
+              value={studentPhoneNumber}
+              onChange={(e) => setStudentPhoneNumber(e.target.value)}
             ></Form.Control>
-            <Form.Control.Feedback type="invalid">
-              {backendErrors && backendErrors.phoneNumber}
-            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group as={Col} md="4" controlId="dadphonenumber">
+            <Form.Label>Dad Phone Number</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter your dad phone number"
+              value={dadPhoneNumber}
+              onChange={(e) => setDadPhoneNumber(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+          <Form.Group as={Col} md="4" controlId="momphonenumber">
+            <Form.Label>Mom Phone Number</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter your mom phone number"
+              value={momPhoneNumber}
+              onChange={(e) => setMomPhoneNumber(e.target.value)}
+            ></Form.Control>
           </Form.Group>
         </Form.Row>
-        <Form.Group controlId="gender">
-          <Form.Label>Gender</Form.Label>
-          <br />
-          <div className="d-flex">
-            <div className="radio">
-              <label>
-                <input
-                  type="radio"
-                  value="Male"
-                  checked={gender === "Male"}
-                  onChange={(e) => setGender(e.target.value)}
-                />
-                <span className="ml-2">Male</span>
-
-              </label>
-            </div>
-            <div className="radio ml-3">
-              <label>
-                <input
-                  type="radio"
-                  value="Female"
-                  checked={gender === "Female"}
-                  onChange={(e) => setGender(e.target.value)}
-                  className=""
-                />
-                <span className="ml-2">Female</span>
-              </label>
-            </div>
-          </div>
-          <Form.Control.Feedback className={backendErrors && backendErrors.gender ? "d-block" : null} type="invalid">
-            {backendErrors && backendErrors.gender}
-          </Form.Control.Feedback>
+        <Form.Group controlId="dateofbirth">
+          <Form.Label>Date of Birth</Form.Label>
+          <Form.Control
+            type="date"
+            value={dateOfBirth}
+            onChange={(e) => setDateOfBirth(e.target.value)}
+          />
         </Form.Group>
 
         <Form.Group controlId="password">
@@ -166,11 +189,7 @@ const RegisterScreen = ({ history, location }) => {
             placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            isInvalid={backendErrors && backendErrors.password}
           ></Form.Control>
-          <Form.Control.Feedback type="invalid">
-            {backendErrors && backendErrors.password}
-          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group controlId="password2">
           <Form.Label>Confirm Password</Form.Label>
@@ -179,14 +198,9 @@ const RegisterScreen = ({ history, location }) => {
             placeholder="Confirm password"
             value={password2}
             onChange={(e) => setPassword2(e.target.value)}
-            isInvalid={backendErrors && backendErrors.password2}
           ></Form.Control>
-          <Form.Control.Feedback type="invalid">
-            {backendErrors && backendErrors.password2}
-          </Form.Control.Feedback>
         </Form.Group>
         <button type="submit" className="btn custom-btn-primary">
-          <span style={{ width: '10px' }}>{loading && <Loader />}</span>
           Register
         </button>
       </Form>

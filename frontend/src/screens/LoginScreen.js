@@ -11,7 +11,7 @@ import { login } from "../actions/userActions";
 const LoginScreen = ({ history, location }) => {
   const [matricNumber, setMatricNumber] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState(null);
+  // const [message, setMessage] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -19,7 +19,7 @@ const LoginScreen = ({ history, location }) => {
   const { userInfo: userInfoRegister } = userRegister;
 
   const userLogin = useSelector((state) => state.userLogin);
-  const { loading, error, success, userInfo } = userLogin;
+  const { loading, error, success, userInfo, backendErrors } = userLogin;
 
   const userConfirm = useSelector((state) => state.userConfirm);
   const { userInfo: userInfoConfirmed } = userConfirm;
@@ -33,16 +33,19 @@ const LoginScreen = ({ history, location }) => {
     if (success) {
       history.push(redirect);
     }
-    if (userInfo && userInfo.isActive) {
+    if (userInfo) {
       history.push(redirect);
     }
-    if (userInfoRegister && !userInfoRegister.isActive) {
-      setMessage("An email has been sent. Please verify your email");
-    }
+    // if (userInfo && userInfo.isActive) {
+    //   history.push(redirect);
+    // }
+    // if (userInfoRegister && !userInfoRegister.isActive) {
+    //   setMessage("An email has been sent. Please verify your email");
+    // }
 
-    if (userInfoConfirmed && userInfoConfirmed.isActive) {
-      setMessage("You can now log in");
-    }
+    // if (userInfoConfirmed && userInfoConfirmed.isActive) {
+    //   setMessage("You can now log in");
+    // }
   }, [
     history,
     success,
@@ -61,7 +64,7 @@ const LoginScreen = ({ history, location }) => {
     <FormContainer>
       <h1>Sign In</h1>
       {error && <Message variant="danger">{error}</Message>}
-      {message && <Message variant="info">{message}</Message>}
+      {/* {message && <Message variant="info">{message}</Message>} */}
       {loading && <Loader />}
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="matricnumber">
@@ -71,7 +74,11 @@ const LoginScreen = ({ history, location }) => {
             placeholder="Enter your matric number"
             value={matricNumber}
             onChange={(e) => setMatricNumber(e.target.value)}
+            isInvalid={backendErrors && backendErrors.matricNumber}
           ></Form.Control>
+          <Form.Control.Feedback type="invalid">
+            {backendErrors && backendErrors.matricNumber}
+          </Form.Control.Feedback>
         </Form.Group>
 
         <Form.Group controlId="password">
@@ -81,7 +88,11 @@ const LoginScreen = ({ history, location }) => {
             placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            isInvalid={backendErrors && backendErrors.password}
           ></Form.Control>
+          <Form.Control.Feedback type="invalid">
+            {backendErrors && backendErrors.password}
+          </Form.Control.Feedback>
         </Form.Group>
         <button type="submit" className="btn custom-btn-primary">
           Sign In

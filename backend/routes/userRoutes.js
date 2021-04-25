@@ -8,12 +8,13 @@ const {
   updateUserProfile,
   deleteUser,
 } = require("../controllers/userController");
+const { userRegisterValidationRules, userLoginValidationRules, validate } = require("../utils/validator")
 const { protect, admin } = require("../middleware/authMiddleware");
 const router = express.Router();
 
-router.route("/").post(registerUser).get(protect, admin, getUsers);
+router.route("/register").post(userRegisterValidationRules(), validate, registerUser)
 router.route("/activate/:token").get(activateUser);
-router.post("/login", authUser);
+router.route("/login").post(userLoginValidationRules(), validate, authUser);
 router
   .route("/profile")
   .get(protect, getUserProfile)

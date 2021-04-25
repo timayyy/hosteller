@@ -1,4 +1,5 @@
 import axios from "axios";
+import { CLEAR_CURRENT_PROFILE } from "../constants/profileConstants";
 import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -17,7 +18,6 @@ import {
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
-  USER_DETAILS_RESET,
   USER_UPDATE_PROFILE_RESET,
   USER_DELETE_FAIL,
   USER_DELETE_SUCCESS,
@@ -52,10 +52,12 @@ export const login = (matricNumber, password) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
-      payload:
-        error.response && error.response.data.message
+      payload: {
+        error: error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
+        backendErrors: error.response && error.response.data.errors ? error.response.data.errors : null
+      }
     });
   }
 };
@@ -63,9 +65,9 @@ export const login = (matricNumber, password) => async (dispatch) => {
 export const logout = () => (dispatch) => {
   localStorage.removeItem("lmUserInfo");
   dispatch({ type: USER_LOGOUT });
-  dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: USER_UPDATE_PROFILE_RESET });
   dispatch({ type: USER_LIST_RESET });
+  dispatch({ type: CLEAR_CURRENT_PROFILE });
 };
 
 export const confirmUser = (id) => async (dispatch) => {
@@ -100,13 +102,8 @@ export const register = (
   name,
   matricNumber,
   lasuEmail,
-  faculty,
-  department,
-  homeAddress,
-  dateOfBirth,
-  studentPhoneNumber,
-  dadPhoneNumber,
-  momPhoneNumber,
+  phoneNumber,
+  gender,
   password,
   password2
 ) => async (dispatch) => {
@@ -120,18 +117,13 @@ export const register = (
       },
     };
     const { data } = await axios.post(
-      "/api/users",
+      "/api/users/register",
       {
         name,
         matricNumber,
         lasuEmail,
-        faculty,
-        department,
-        homeAddress,
-        dateOfBirth,
-        studentPhoneNumber,
-        dadPhoneNumber,
-        momPhoneNumber,
+        phoneNumber,
+        gender,
         password,
         password2,
       },
@@ -143,19 +135,17 @@ export const register = (
       payload: data,
     });
 
-    // dispatch({
-    //   type: USER_LOGIN_SUCCESS,
-    //   payload: data,
-    // });
-
     localStorage.setItem("lmUserInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,
-      payload:
-        error.response && error.response.data.message
+      payload: {
+        error: error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
+        backendErrors: error.response && error.response.data.errors ? error.response.data.errors : null
+      }
+
     });
   }
 };
